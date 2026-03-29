@@ -22,7 +22,11 @@ const StoreGameCard = ({ game }) => {
     <div className={`${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col`}>
       {/* Image */}
       <div className="w-full h-48 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center overflow-hidden flex-shrink-0">
-        <img src={game.image_url} alt={game.title} className="w-full h-full object-cover" />
+        {game.image_url ? (
+          <img src={game.image_url} alt={game.title} className="w-full h-full object-cover" onError={(e) => {e.target.style.display = 'none'}} />
+        ) : (
+          <div className="text-gray-600 text-sm text-center px-4">No image available</div>
+        )}
       </div>
 
       {/* Content */}
@@ -33,9 +37,24 @@ const StoreGameCard = ({ game }) => {
           {game.description}
         </p>
 
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs bg-blue-500 px-2 py-1 rounded">{game.genre}</span>
-          <span className="text-yellow-400 font-semibold text-sm">⭐ {game.rating}</span>
+        <div className="space-y-1 mb-3 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="bg-blue-500 px-2 py-1 rounded">{game.genre}</span>
+            <span className="text-yellow-400 font-semibold">⭐ {game.rating}</span>
+          </div>
+          {game.developers && (
+            <p className={`${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+              <strong>Dev:</strong> {game.developers}
+            </p>
+          )}
+          {game.platforms && (
+            <p className={`${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+              <strong>Platform:</strong> {game.platforms}
+            </p>
+          )}
+          {game.coop && (
+            <p className="text-green-500 font-semibold">✓ Co-op Available</p>
+          )}
         </div>
 
         <div className="flex items-center justify-between mb-4">

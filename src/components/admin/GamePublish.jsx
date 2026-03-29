@@ -37,28 +37,40 @@ const GamePublish = ({ selectedGame, onPublished }) => {
 
     try {
       // Map TheGamesDB structure to our database structure
-      let imageUrl = 'https://via.placeholder.com/300x400';
+      let imageUrl = null;
       
-      if (selectedGame.box_art?.thumb) {
-        imageUrl = selectedGame.box_art.thumb;
+      console.log("Selected game data:", selectedGame);
+      
+      // Use image URL from processed game data
+      if (selectedGame.image_url) {
+        imageUrl = selectedGame.image_url;
       } else if (selectedGame.box_art) {
         imageUrl = selectedGame.box_art;
       } else if (selectedGame.images && selectedGame.images.length > 0) {
-        imageUrl = selectedGame.images[0].thumb || selectedGame.images[0];
-      } else if (selectedGame.image_url) {
-        imageUrl = selectedGame.image_url;
+        const img = selectedGame.images[0];
+        if (img.filename) {
+          imageUrl = `https://cdn.thegamesdb.net/images/${img.filename}`;
+        }
       }
       
       const newGame = {
         title: selectedGame.game_title || selectedGame.title,
         description: selectedGame.overview || selectedGame.description || '',
-        genre: Array.isArray(selectedGame.genre) ? selectedGame.genre.join(', ') : (selectedGame.genre || ''),
+        genre: Array.isArray(selectedGame.genre) ? selectedGame.genre.join(', ') : (selectedGame.genre || selectedGame.genres || ''),
         rating: selectedGame.rating ? parseFloat(selectedGame.rating) : 0,
+        developers: selectedGame.developers ? selectedGame.developers.join(', ') : '',
+        publishers: selectedGame.publishers ? selectedGame.publishers.join(', ') : '',
+        platforms: selectedGame.platforms ? selectedGame.platforms.join(', ') : '',
+        release_date: selectedGame.release_date || '',
+        players: selectedGame.players || null,
+        coop: selectedGame.coop || false,
         image_url: imageUrl,
         stock: parseInt(stock),
         price: parseFloat(price),
         is_published: true
       }
+      
+      console.log("Game to publish:", newGame);
 
       await db.createGame(newGame)
       Swal.fire({
@@ -116,8 +128,31 @@ const GamePublish = ({ selectedGame, onPublished }) => {
           })()}
           <div>
             <h3 className="font-semibold text-lg">{selectedGame.game_title}</h3>
-            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedGame.genre || selectedGame.genres || 'N/A'}</p>
+            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedGame.genre || 'N/A'}</p>
             {selectedGame.rating && <p className="text-yellow-400 text-sm">⭐ {selectedGame.rating}</p>}
+            {selectedGame.platforms && selectedGame.platforms.length > 0 && (
+              <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'} mt-1`}>
+                <strong>Platforms:</strong> {selectedGame.platforms.join(', ')}
+              </p>
+            )}
+            {selectedGame.developers && selectedGame.developers.length > 0 && (
+              <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                <strong>Dev:</strong> {selectedGame.developers.join(', ')}
+              </p>
+            )}
+            {selectedGame.publishers && selectedGame.publishers.length > 0 && (
+              <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                <strong>Pub:</strong> {selectedGame.publishers.join(', ')}
+              </p>
+            )}
+            {selectedGame.release_date && (
+              <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                <strong>Released:</strong> {selectedGame.release_date}
+              </p>
+            )}
+            {selectedGame.coop && (
+              <p className={`text-xs text-green-500 font-semibold`}>✓ Co-op Available</p>
+            )}
             <p className={`text-sm mt-2 line-clamp-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
               {selectedGame.overview || selectedGame.description}
             </p>
