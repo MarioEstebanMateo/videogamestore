@@ -8,7 +8,6 @@ import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import GameSearch from '../components/admin/GameSearch'
 import GamePublish from '../components/admin/GamePublish'
-import GamesList from '../components/admin/GamesList'
 import PublishedGamesList from '../components/admin/PublishedGamesList'
 import CartDrawer from '../components/cart/CartDrawer'
 import LoginModal from '../components/auth/LoginModal'
@@ -75,14 +74,7 @@ const Admin = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
-              <GamesList refreshTrigger={refreshTrigger} />
-            </div>
-            <div>
-              <PublishedGamesList refreshTrigger={refreshTrigger} />
-            </div>
-          </div>
+          <PublishedGamesList refreshTrigger={refreshTrigger} />
         </div>
       </main>
 

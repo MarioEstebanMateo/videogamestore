@@ -174,7 +174,7 @@ const PublishedGamesList = ({ refreshTrigger }) => {
                 </div>
               ) : (
                 // View Mode
-                <div className="flex gap-4 items-start">
+                <div className="flex gap-4">
                   {game.image_url ? (
                     <img 
                       src={game.image_url} 
@@ -187,6 +187,11 @@ const PublishedGamesList = ({ refreshTrigger }) => {
                   )}
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold truncate">{game.title}</h3>
+                    {game.description && (
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-1 line-clamp-2`}>
+                        {game.description.length > 100 ? game.description.substring(0, 100) + '...' : game.description}
+                      </p>
+                    )}
                     <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       Stock: {game.stock} | Price: ${game.price.toFixed(2)}
                     </p>

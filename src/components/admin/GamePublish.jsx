@@ -36,7 +36,7 @@ const GamePublish = ({ selectedGame, onPublished }) => {
     setLoading(true)
 
     try {
-      // Map TheGamesDB structure to our database structure
+      // Map game structure from RAWG to our database structure
       let imageUrl = null;
       
       console.log("Selected game data:", selectedGame);
@@ -46,11 +46,6 @@ const GamePublish = ({ selectedGame, onPublished }) => {
         imageUrl = selectedGame.image_url;
       } else if (selectedGame.box_art) {
         imageUrl = selectedGame.box_art;
-      } else if (selectedGame.images && selectedGame.images.length > 0) {
-        const img = selectedGame.images[0];
-        if (img.filename) {
-          imageUrl = `https://cdn.thegamesdb.net/images/${img.filename}`;
-        }
       }
       
       const newGame = {

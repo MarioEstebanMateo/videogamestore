@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useTheme } from '../../hooks/useTheme'
 import { Search, Loader } from 'lucide-react'
-import * as api from '../../services/thegamesdb'
+import * as api from '../../services/rawg'
 
 const GameSearch = ({ onSelectGame }) => {
   const { isDark } = useTheme()
@@ -19,7 +19,7 @@ const GameSearch = ({ onSelectGame }) => {
     setResults([])
 
     try {
-      const games = await api.searchGamesTheGamesDB(searchTerm)
+      const games = await api.searchGamesRAWG(searchTerm)
       setResults(games)
     } catch (err) {
       setError(err.message || 'Error searching games')
@@ -59,7 +59,7 @@ const GameSearch = ({ onSelectGame }) => {
       {results.length > 0 && (
         <div className={`space-y-2 max-h-96 overflow-y-auto`}>
           {results.map((game, idx) => {
-            // Handle different image sources from TheGamesDB
+            // Get image URL from game data
             let imageUrl = null;
             if (game.box_art?.thumb) {
               imageUrl = game.box_art.thumb;
