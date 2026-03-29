@@ -4,7 +4,7 @@ import { useCart } from '../../hooks/useCart'
 import { useAuth } from '../../hooks/useAuth'
 import { ShoppingCart } from 'lucide-react'
 import { getNeonColorStyle } from '../../utils/neonColors'
-import '../GameCard.css'
+import './neon.css'
 
 const StoreGameCard = ({ game }) => {
   const { isDark } = useTheme()

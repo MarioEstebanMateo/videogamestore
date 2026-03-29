@@ -22,11 +22,11 @@ const GamePublish = ({ selectedGame, onPublished }) => {
       return
     }
 
-    if (stock < 0 || price < 0) {
+    if (stock <= 0 || price <= 0) {
       Swal.fire({
         icon: 'warning',
         title: 'Invalid Values',
-        text: 'Stock and price must be positive',
+        text: 'Stock and price must be greater than 0',
         background: isDark ? '#1e293b' : '#ffffff',
         color: isDark ? '#f1f5f9' : '#000000',
       })
@@ -38,8 +38,6 @@ const GamePublish = ({ selectedGame, onPublished }) => {
     try {
       // Map game structure from RAWG to our database structure
       let imageUrl = null;
-      
-      console.log("Selected game data:", selectedGame);
       
       // Use image URL from processed game data
       if (selectedGame.image_url) {
@@ -65,8 +63,6 @@ const GamePublish = ({ selectedGame, onPublished }) => {
         is_published: true
       }
       
-      console.log("Game to publish:", newGame);
-
       await db.createGame(newGame)
       Swal.fire({
         icon: 'success',

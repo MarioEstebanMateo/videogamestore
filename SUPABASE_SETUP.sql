@@ -29,6 +29,10 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Insert default admin user
+-- ⚠️ SECURITY WARNING: Change this password in production!
+-- Default credentials: username='admin' password='admin'
+-- DO NOT use default credentials in production
+-- After deployment, update the admin password in your database immediately
 INSERT INTO users (username, password_hash) VALUES ('admin', 'admin')
 ON CONFLICT (username) DO NOTHING;
 

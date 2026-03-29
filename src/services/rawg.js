@@ -12,8 +12,6 @@ export const searchGamesRAWG = async (gameName) => {
 
     let url = `${BASE_URL}/games?search=${encodeURIComponent(gameName)}&page_size=10&key=${API_KEY}`;
 
-    console.log("Fetching from RAWG:", url);
-
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -26,7 +24,6 @@ export const searchGamesRAWG = async (gameName) => {
     }
 
     const data = await response.json();
-    console.log("RAWG Search Response:", data);
 
     const games = data.results || [];
 
@@ -89,7 +86,6 @@ export const getGameDetailsRAWG = async (gameId) => {
     }
 
     const game = await response.json();
-    console.log("RAWG Game Details:", game);
 
     return {
       id: game.id,

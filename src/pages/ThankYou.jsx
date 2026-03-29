@@ -7,7 +7,7 @@ import CartDrawer from '../components/cart/CartDrawer'
 import LoginModal from '../components/auth/LoginModal'
 import SignupModal from '../components/auth/SignupModal'
 import { CheckCircle } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const ThankYou = () => {
   const { isDark } = useTheme()
@@ -15,6 +15,11 @@ const ThankYou = () => {
   const [cartOpen, setCartOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
   const [signupOpen, setSignupOpen] = useState(false)
+
+  // Scroll to top when page loads
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <div className={`min-h-screen flex flex-col ${isDark ? 'bg-slate-950 text-white' : 'bg-white text-slate-900'}`}>

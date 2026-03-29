@@ -56,10 +56,12 @@ export const signup = async (username, password) => {
       throw new Error("Username already registered");
     }
 
-    // Create user in database
+    // ⚠️ IMPORTANT: In production, hash passwords with bcryptjs before storing
+    // Install: npm install bcryptjs
+    // Then use: const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await db.createUser({
       username: username,
-      password_hash: password, // In production, hash this with bcryptjs!
+      password_hash: password, // TODO: Hash this before deployment!
     });
 
     // Set as current user
@@ -78,6 +80,8 @@ export const login = async (username, password) => {
     // Find user by username
     const user = await db.getUserByUsername(username);
 
+    // ⚠️ IMPORTANT: In production, compare hashed passwords with bcryptjs
+    // if (!user || !await bcrypt.compare(password, user.password_hash))
     if (!user || user.password_hash !== password) {
       throw new Error("Invalid username or password");
     }
