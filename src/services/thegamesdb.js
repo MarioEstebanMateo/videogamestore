@@ -2,6 +2,10 @@ const API_KEY = import.meta.env.VITE_GAMES_DB_API_KEY;
 
 export const searchGamesTheGamesDB = async (gameName) => {
   try {
+    if (!API_KEY || API_KEY === 'YOUR_API_KEY_HERE') {
+      throw new Error('TheGamesDB API key not configured. Please add VITE_GAMES_DB_API_KEY to .env.local');
+    }
+
     // First search to get game IDs
     const response = await fetch(
       `/api/Games/ByGameName?name=${encodeURIComponent(gameName)}&apikey=${API_KEY}`,
