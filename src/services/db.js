@@ -151,7 +151,8 @@ export const createGame = async (gameData) => {
   const newGame = {
     id: Date.now().toString(),
     ...gameData,
-    is_published: false,
+    is_published:
+      gameData.is_published !== undefined ? gameData.is_published : false,
     created_at: new Date().toISOString(),
   };
   db.games.push(newGame);

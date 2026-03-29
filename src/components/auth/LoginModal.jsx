@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
 import { useAuth } from '../../hooks/useAuth'
 import { useTheme } from '../../hooks/useTheme'
 import { X } from 'lucide-react'
@@ -6,23 +7,34 @@ import { X } from 'lucide-react'
 const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
   const { login } = useAuth()
   const { isDark } = useTheme()
-  const [email, setEmail] = useState('test@test.com')
-  const [password, setPassword] = useState('password')
-  const [error, setError] = useState('')
+  const [email, setEmail] = useState('admin')
+  const [password, setPassword] = useState('admin')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError('')
     setLoading(true)
 
     try {
       await login(email, password)
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'You have logged in successfully',
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
       onClose()
       setEmail('')
       setPassword('')
     } catch (err) {
-      setError(err.message)
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: err.message,
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
     } finally {
       setLoading(false)
     }
@@ -41,21 +53,17 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {error && (
-            <div className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded">
-              {error}
-            </div>
-          )}
-
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label className="block text-sm font-medium mb-2">Username</label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`w-full px-4 py-2 rounded border ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-white border-slate-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
               disabled={loading}
+              placeholder="admin"
             />
+            <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Demo: admin</p>
           </div>
 
           <div>
@@ -66,7 +74,9 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
               onChange={(e) => setPassword(e.target.value)}
               className={`w-full px-4 py-2 rounded border ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-white border-slate-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
               disabled={loading}
+              placeholder="password"
             />
+            <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Demo: admin</p>
           </div>
 
           <button

@@ -19,17 +19,17 @@ const StoreGameCard = ({ game }) => {
   }
 
   return (
-    <div className={`${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border rounded-lg overflow-hidden hover:shadow-lg transition-shadow`}>
+    <div className={`${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col`}>
       {/* Image */}
-      <div className="w-full h-48 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center overflow-hidden">
+      <div className="w-full h-48 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center overflow-hidden flex-shrink-0">
         <img src={game.image_url} alt={game.title} className="w-full h-full object-cover" />
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        <h3 className="font-bold text-lg mb-2 line-clamp-2">{game.title}</h3>
+      <div className="p-4 flex flex-col flex-1">
+        <h3 className="font-bold text-lg mb-2 line-clamp-2 h-14 flex items-start">{game.title}</h3>
         
-        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2 line-clamp-2`}>
+        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2 line-clamp-2 flex-1`}>
           {game.description}
         </p>
 
@@ -50,7 +50,7 @@ const StoreGameCard = ({ game }) => {
         <button
           onClick={handleAddToCart}
           disabled={game.stock === 0}
-          className={`w-full py-2 rounded font-medium flex items-center justify-center gap-2 transition-colors ${added ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'} text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-500`}
+          className={`w-full py-2 rounded font-medium flex items-center justify-center gap-2 transition-colors ${added ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'} text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-500 flex-shrink-0`}
         >
           <ShoppingCart size={18} />
           {added ? 'Added!' : 'Add to Cart'}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
 import { useAuth } from '../../hooks/useAuth'
 import { useTheme } from '../../hooks/useTheme'
 import { X } from 'lucide-react'
@@ -9,20 +10,30 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError('')
 
     if (!email || !password || !username) {
-      setError('All fields are required')
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Fields',
+        text: 'All fields are required',
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
       return
     }
 
     if (password.length < 3) {
-      setError('Password must be at least 3 characters')
+      Swal.fire({
+        icon: 'warning',
+        title: 'Weak Password',
+        text: 'Password must be at least 3 characters',
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
       return
     }
 
@@ -30,12 +41,25 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
 
     try {
       await signup(email, password, username)
+      Swal.fire({
+        icon: 'success',
+        title: 'Account Created!',
+        text: 'Your account has been created successfully',
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
       onClose()
       setEmail('')
       setPassword('')
       setUsername('')
     } catch (err) {
-      setError(err.message)
+      Swal.fire({
+        icon: 'error',
+        title: 'Sign Up Failed',
+        text: err.message,
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
     } finally {
       setLoading(false)
     }
@@ -54,12 +78,6 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {error && (
-            <div className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-3 rounded">
-              {error}
-            </div>
-          )}
-
           <div>
             <label className="block text-sm font-medium mb-2">Username</label>
             <input
@@ -74,11 +92,12 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           <div>
             <label className="block text-sm font-medium mb-2">Email</label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`w-full px-4 py-2 rounded border ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-white border-slate-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
               disabled={loading}
+              placeholder="user@example.com"
             />
           </div>
 

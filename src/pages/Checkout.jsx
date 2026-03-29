@@ -1,4 +1,5 @@
 import React from 'react'
+import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../hooks/useTheme'
 import { useAuth } from '../hooks/useAuth'
@@ -29,7 +30,13 @@ const Checkout = () => {
     }
 
     if (items.length === 0) {
-      alert('Your cart is empty')
+      Swal.fire({
+        icon: 'warning',
+        title: 'Empty Cart',
+        text: 'Your cart is empty. Add items before checking out.',
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
       return
     }
 
@@ -44,7 +51,13 @@ const Checkout = () => {
       navigate('/thank-you')
     } catch (error) {
       console.error('Error completing order:', error)
-      alert('Error completing order. Please try again.')
+      Swal.fire({
+        icon: 'error',
+        title: 'Order Failed',
+        text: 'Error completing your order. Please try again.',
+        background: isDark ? '#1e293b' : '#ffffff',
+        color: isDark ? '#f1f5f9' : '#000000',
+      })
     } finally {
       setProcessing(false)
     }

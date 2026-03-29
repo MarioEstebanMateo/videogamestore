@@ -1,7 +1,7 @@
 import React from 'react'
-import { useTheme } from '../hooks/useTheme'
-import { useAuth } from '../hooks/useAuth'
-import { useCart } from '../hooks/useCart'
+import { useTheme } from '../../hooks/useTheme'
+import { useAuth } from '../../hooks/useAuth'
+import { useCart } from '../../hooks/useCart'
 import { Link, useNavigate } from 'react-router-dom'
 import { Moon, Sun, ShoppingCart, Menu, X } from 'lucide-react'
 import { useState } from 'react'
@@ -28,7 +28,7 @@ const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-transparent">
-          Video Games Store
+          Video Games Store by Mario
         </Link>
 
         {/* Desktop Menu */}
@@ -55,7 +55,7 @@ const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
           {user ? (
             <div className="flex items-center gap-4">
               <span className="text-sm">{user.username}</span>
-              {user.email === 'admin@store.com' && (
+              {user.email === 'admin' && (
                 <button
                   onClick={handleAdminClick}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors text-sm"
@@ -100,7 +100,7 @@ const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
           <button onClick={onCartClick} className="relative hover:text-blue-500 transition-colors">
             <ShoppingCart size={20} />
             {count > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-xs">
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                 {count}
               </span>
             )}
@@ -122,7 +122,7 @@ const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
             {user ? (
               <>
                 <div className="py-2 text-sm">{user.username}</div>
-                {user.email === 'admin@store.com' && (
+                {user.email === 'admin' && (
                   <button
                     onClick={handleAdminClick}
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors text-sm w-full"

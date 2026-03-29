@@ -4,16 +4,34 @@
 const USERS_KEY = "videogamestore_users";
 const CURRENT_USER_KEY = "videogamestore_current_user";
 
+// Default admin user
+const defaultAdmin = {
+  id: "0",
+  email: "admin",
+  username: "admin",
+  password: "admin",
+  is_admin: true,
+  created_at: new Date().toISOString(),
+};
+
 const getUsers = () => {
   const stored = localStorage.getItem(USERS_KEY);
-  return stored ? JSON.parse(stored) : [];
+  const users = stored ? JSON.parse(stored) : [defaultAdmin];
+
+  // Ensure admin always exists
+  if (!users.find((u) => u.email === "admin")) {
+    users.push(defaultAdmin);
+    saveUsers(users);
+  }
+
+  return users;
 };
 
 const saveUsers = (users) => {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 };
 
-const getCurrentUser = () => {
+export const getCurrentUser = () => {
   const stored = localStorage.getItem(CURRENT_USER_KEY);
   return stored ? JSON.parse(stored) : null;
 };
@@ -26,13 +44,24 @@ const setCurrentUser = (user) => {
   }
 };
 
+// Helper function to validate email format
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 // Sign up
 export const signup = async (email, password, username) => {
   const users = getUsers();
 
+  // Validate email format for non-admin users
+  if (email !== "admin" && !isValidEmail(email)) {
+    throw new Error("Please enter a valid email address");
+  }
+
   // Check if email already exists
   if (users.find((u) => u.email === email)) {
-    throw new Error("Email already registered");
+    throw new Error("Email/username already registered");
   }
 
   const newUser = {
@@ -56,7 +85,7 @@ export const login = async (email, password) => {
   const user = users.find((u) => u.email === email && u.password === password);
 
   if (!user) {
-    throw new Error("Invalid email or password");
+    throw new Error("Invalid username/email or password");
   }
 
   setCurrentUser(user);
