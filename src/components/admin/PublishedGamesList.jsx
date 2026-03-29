@@ -174,14 +174,24 @@ const PublishedGamesList = ({ refreshTrigger }) => {
                 </div>
               ) : (
                 // View Mode
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{game.title}</h3>
+                <div className="flex gap-4 items-start">
+                  {game.image_url ? (
+                    <img 
+                      src={game.image_url} 
+                      alt={game.title} 
+                      className="w-16 h-20 object-cover rounded flex-shrink-0" 
+                      onError={(e) => {e.target.style.display = 'none'}}
+                    />
+                  ) : (
+                    <div className="w-16 h-20 bg-gray-300 dark:bg-gray-600 rounded flex-shrink-0 flex items-center justify-center text-xs">No img</div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold truncate">{game.title}</h3>
                     <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       Stock: {game.stock} | Price: ${game.price.toFixed(2)}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-shrink-0">
                     <button
                       onClick={() => handleStartEdit(game)}
                       className={`p-2 rounded transition-colors ${isDark ? 'hover:bg-slate-600' : 'hover:bg-slate-100'} text-blue-500`}

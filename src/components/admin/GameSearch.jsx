@@ -58,27 +58,39 @@ const GameSearch = ({ onSelectGame }) => {
 
       {results.length > 0 && (
         <div className={`space-y-2 max-h-96 overflow-y-auto`}>
-          {results.map((game, idx) => (
-            <div
-              key={`${game.id || idx}`}
-              onClick={() => onSelectGame(game)}
-              className={`p-4 rounded cursor-pointer transition-colors ${isDark ? 'bg-slate-700 hover:bg-slate-600' : 'bg-white hover:bg-slate-50'} border ${isDark ? 'border-slate-600' : 'border-slate-200'}`}
-            >
-              <div className="flex gap-4">
-                {game.box_art ? (
-                  <img src={game.box_art} alt={game.game_title} className="w-16 h-20 object-cover rounded" />
-                ) : (
-                  <div className="w-16 h-20 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-sm">No image</div>
-                )}
-                <div className="flex-1">
-                  <h3 className="font-semibold">{game.game_title}</h3>
-                  {game.release_date && <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Released: {game.release_date}</p>}
-                  {game.rating && <p className="text-yellow-400 text-sm">⭐ {game.rating}</p>}
-                  {game.genres && <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{Array.isArray(game.genres) ? game.genres.join(', ') : game.genres}</p>}
+          {results.map((game, idx) => {
+            // Handle different image sources from TheGamesDB
+            let imageUrl = null;
+            if (game.box_art?.thumb) {
+              imageUrl = game.box_art.thumb;
+            } else if (game.box_art) {
+              imageUrl = game.box_art;
+            } else if (game.images && game.images.length > 0) {
+              imageUrl = game.images[0].thumb || game.images[0];
+            }
+            
+            return (
+              <div
+                key={`${game.id || idx}`}
+                onClick={() => onSelectGame(game)}
+                className={`p-4 rounded cursor-pointer transition-colors ${isDark ? 'bg-slate-700 hover:bg-slate-600' : 'bg-white hover:bg-slate-50'} border ${isDark ? 'border-slate-600' : 'border-slate-200'}`}
+              >
+                <div className="flex gap-4">
+                  {imageUrl ? (
+                    <img src={imageUrl} alt={game.game_title} className="w-16 h-20 object-cover rounded" onError={(e) => {e.target.style.display = 'none'}} />
+                  ) : (
+                    <div className="w-16 h-20 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-sm text-center">No image</div>
+                  )}
+                  <div className="flex-1">
+                    <h3 className="font-semibold">{game.game_title}</h3>
+                    {game.release_date && <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Released: {game.release_date}</p>}
+                    {game.rating && <p className="text-yellow-400 text-sm">⭐ {game.rating}</p>}
+                    {game.genres && <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{Array.isArray(game.genres) ? game.genres.join(', ') : game.genres}</p>}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

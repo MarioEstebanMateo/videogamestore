@@ -37,12 +37,24 @@ const GamePublish = ({ selectedGame, onPublished }) => {
 
     try {
       // Map TheGamesDB structure to our database structure
+      let imageUrl = 'https://via.placeholder.com/300x400';
+      
+      if (selectedGame.box_art?.thumb) {
+        imageUrl = selectedGame.box_art.thumb;
+      } else if (selectedGame.box_art) {
+        imageUrl = selectedGame.box_art;
+      } else if (selectedGame.images && selectedGame.images.length > 0) {
+        imageUrl = selectedGame.images[0].thumb || selectedGame.images[0];
+      } else if (selectedGame.image_url) {
+        imageUrl = selectedGame.image_url;
+      }
+      
       const newGame = {
         title: selectedGame.game_title || selectedGame.title,
         description: selectedGame.overview || selectedGame.description || '',
         genre: Array.isArray(selectedGame.genre) ? selectedGame.genre.join(', ') : (selectedGame.genre || ''),
         rating: selectedGame.rating ? parseFloat(selectedGame.rating) : 0,
-        image_url: selectedGame.box_art || selectedGame.image_url || 'https://via.placeholder.com/300x400',
+        image_url: imageUrl,
         stock: parseInt(stock),
         price: parseFloat(price),
         is_published: true
@@ -87,11 +99,21 @@ const GamePublish = ({ selectedGame, onPublished }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Game Info */}
         <div className="flex gap-4">
-          {selectedGame.box_art ? (
-            <img src={selectedGame.box_art} alt={selectedGame.game_title} className="w-24 h-32 object-cover rounded" />
-          ) : (
-            <div className="w-24 h-32 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-sm">No image</div>
-          )}
+          {(() => {
+            let imageUrl = null;
+            if (selectedGame.box_art?.thumb) {
+              imageUrl = selectedGame.box_art.thumb;
+            } else if (selectedGame.box_art) {
+              imageUrl = selectedGame.box_art;
+            } else if (selectedGame.images && selectedGame.images.length > 0) {
+              imageUrl = selectedGame.images[0].thumb || selectedGame.images[0];
+            }
+            return imageUrl ? (
+              <img src={imageUrl} alt={selectedGame.game_title} className="w-24 h-32 object-cover rounded" onError={(e) => {e.target.style.display = 'none'}} />
+            ) : (
+              <div className="w-24 h-32 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-sm">No image</div>
+            );
+          })()}
           <div>
             <h3 className="font-semibold text-lg">{selectedGame.game_title}</h3>
             <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedGame.genre || selectedGame.genres || 'N/A'}</p>
