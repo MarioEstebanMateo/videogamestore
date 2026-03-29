@@ -9,6 +9,7 @@ import Footer from '../components/common/Footer'
 import GameSearch from '../components/admin/GameSearch'
 import GamePublish from '../components/admin/GamePublish'
 import GamesList from '../components/admin/GamesList'
+import PublishedGamesList from '../components/admin/PublishedGamesList'
 import CartDrawer from '../components/cart/CartDrawer'
 import LoginModal from '../components/auth/LoginModal'
 import SignupModal from '../components/auth/SignupModal'
@@ -67,14 +68,19 @@ const Admin = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             <div className="lg:col-span-2">
               <GameSearch onSelectGame={handleGameSelected} />
               <GamePublish selectedGame={selectedGame} onPublished={handleGamePublished} />
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
               <GamesList refreshTrigger={refreshTrigger} />
+            </div>
+            <div>
+              <PublishedGamesList refreshTrigger={refreshTrigger} />
             </div>
           </div>
         </div>

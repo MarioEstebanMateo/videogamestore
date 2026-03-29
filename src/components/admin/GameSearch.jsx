@@ -80,7 +80,7 @@ const GameSearch = ({ onSelectGame }) => {
             </div>
           ))}
         </div>
-      )}}
+      )}
 
       {!loading && results.length === 0 && searchTerm && (
         <p className={`text-center py-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
