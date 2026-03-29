@@ -82,10 +82,16 @@ export const signup = async (email, password, username) => {
 // Login
 export const login = async (email, password) => {
   const users = getUsers();
-  const user = users.find((u) => u.email === email && u.password === password);
+  let user = users.find((u) => u.email === email && u.password === password);
 
   if (!user) {
     throw new Error("Invalid username/email or password");
+  }
+
+  // Ensure admin user has is_admin flag
+  if (user.email === "admin" && !user.is_admin) {
+    user.is_admin = true;
+    saveUsers(users);
   }
 
   setCurrentUser(user);

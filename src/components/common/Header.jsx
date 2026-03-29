@@ -55,7 +55,7 @@ const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
           {user ? (
             <div className="flex items-center gap-4">
               <span className="text-sm">{user.username}</span>
-              {user.email === 'admin' && (
+              {(user.is_admin || user.email === 'admin') && (
                 <button
                   onClick={handleAdminClick}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors text-sm"
@@ -122,7 +122,7 @@ const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
             {user ? (
               <>
                 <div className="py-2 text-sm">{user.username}</div>
-                {user.email === 'admin' && (
+                {(user.is_admin || user.email === 'admin') && (
                   <button
                     onClick={handleAdminClick}
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors text-sm w-full"

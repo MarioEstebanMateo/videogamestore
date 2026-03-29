@@ -9,7 +9,11 @@ export const AuthProvider = ({ children }) => {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const currentUser = authService.getCurrentUser()
+    let currentUser = authService.getCurrentUser()
+    // Ensure admin user has is_admin flag
+    if (currentUser && currentUser.email === "admin" && !currentUser.is_admin) {
+      currentUser.is_admin = true
+    }
     setUser(currentUser)
     setLoading(false)
   }, [])

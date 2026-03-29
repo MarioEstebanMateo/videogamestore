@@ -87,12 +87,14 @@ const GamePublish = ({ selectedGame, onPublished }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Game Info */}
         <div className="flex gap-4">
-          {selectedGame.box_art && (
+          {selectedGame.box_art ? (
             <img src={selectedGame.box_art} alt={selectedGame.game_title} className="w-24 h-32 object-cover rounded" />
+          ) : (
+            <div className="w-24 h-32 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-sm">No image</div>
           )}
           <div>
             <h3 className="font-semibold text-lg">{selectedGame.game_title}</h3>
-            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedGame.genre}</p>
+            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedGame.genre || selectedGame.genres || 'N/A'}</p>
             {selectedGame.rating && <p className="text-yellow-400 text-sm">⭐ {selectedGame.rating}</p>}
             <p className={`text-sm mt-2 line-clamp-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
               {selectedGame.overview || selectedGame.description}

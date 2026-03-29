@@ -65,19 +65,22 @@ const GameSearch = ({ onSelectGame }) => {
               className={`p-4 rounded cursor-pointer transition-colors ${isDark ? 'bg-slate-700 hover:bg-slate-600' : 'bg-white hover:bg-slate-50'} border ${isDark ? 'border-slate-600' : 'border-slate-200'}`}
             >
               <div className="flex gap-4">
-                {game.box_art && (
+                {game.box_art ? (
                   <img src={game.box_art} alt={game.game_title} className="w-16 h-20 object-cover rounded" />
+                ) : (
+                  <div className="w-16 h-20 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-sm">No image</div>
                 )}
                 <div className="flex-1">
                   <h3 className="font-semibold">{game.game_title}</h3>
                   {game.release_date && <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Released: {game.release_date}</p>}
                   {game.rating && <p className="text-yellow-400 text-sm">⭐ {game.rating}</p>}
+                  {game.genres && <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{Array.isArray(game.genres) ? game.genres.join(', ') : game.genres}</p>}
                 </div>
               </div>
             </div>
           ))}
         </div>
-      )}
+      )}}
 
       {!loading && results.length === 0 && searchTerm && (
         <p className={`text-center py-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
