@@ -1,14 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTheme } from '../../hooks/useTheme'
 import { Search, Loader } from 'lucide-react'
 import * as api from '../../services/rawg'
 
-const GameSearch = ({ onSelectGame }) => {
+const GameSearch = ({ onSelectGame, clearTrigger }) => {
   const { isDark } = useTheme()
   const [searchTerm, setSearchTerm] = useState('')
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Clear search when clearTrigger changes
+  useEffect(() => {
+    setSearchTerm('')
+    setResults([])
+    setError('')
+  }, [clearTrigger])
 
   const handleSearch = async (e) => {
     e.preventDefault()

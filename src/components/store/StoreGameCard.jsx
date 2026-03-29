@@ -3,6 +3,8 @@ import { useTheme } from '../../hooks/useTheme'
 import { useCart } from '../../hooks/useCart'
 import { useAuth } from '../../hooks/useAuth'
 import { ShoppingCart } from 'lucide-react'
+import { getNeonColorStyle } from '../../utils/neonColors'
+import '../GameCard.css'
 
 const StoreGameCard = ({ game }) => {
   const { isDark } = useTheme()
@@ -29,7 +31,8 @@ const StoreGameCard = ({ game }) => {
   }
 
   return (
-    <div className={`${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col`}>
+    <div className="game-card-neon h-full" style={getNeonColorStyle(game.id || game.title)}>
+      <div className={`${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} border rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col`}>
       {/* Image */}
       <div className="w-full h-48 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center overflow-hidden flex-shrink-0">
         {game.image_url ? (
@@ -47,24 +50,39 @@ const StoreGameCard = ({ game }) => {
           {game.description}
         </p>
 
-        <div className="space-y-1 mb-3 text-xs">
-          <div className="flex items-center justify-between">
-            <span className="bg-blue-500 px-2 py-1 rounded">{game.genre}</span>
-            <span className="text-yellow-400 font-semibold">⭐ {game.rating}</span>
+        <div className="space-y-2 mb-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="bg-blue-500 px-2 py-1 rounded text-xs">{game.genre}</span>
+            <span className="text-yellow-400 font-semibold text-sm">⭐ {game.rating}/5</span>
           </div>
-          {game.developers && (
-            <p className={`${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-              <strong>Dev:</strong> {game.developers}
-            </p>
-          )}
-          {game.platforms && (
-            <p className={`${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-              <strong>Platform:</strong> {game.platforms}
-            </p>
-          )}
-          {game.coop && (
-            <p className="text-green-500 font-semibold">✓ Co-op Available</p>
-          )}
+          {/* Rating Progress Bar */}
+          <div className="w-full h-2 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${
+                game.rating >= 4
+                  ? 'bg-gradient-to-r from-green-400 to-green-500'
+                  : game.rating >= 3
+                  ? 'bg-gradient-to-r from-yellow-400 to-yellow-500'
+                  : 'bg-gradient-to-r from-red-400 to-red-500'
+              }`}
+              style={{ width: `${(game.rating / 5) * 100}%` }}
+            />
+          </div>
+          <div className="space-y-1 text-xs">
+            {game.developers && (
+              <p className={`${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                <strong>Dev:</strong> {game.developers}
+              </p>
+            )}
+            {game.platforms && (
+              <p className={`${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                <strong>Platform:</strong> {game.platforms}
+              </p>
+            )}
+            {game.coop && (
+              <p className="text-green-500 font-semibold">✓ Co-op Available</p>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center justify-between mb-4">
@@ -90,6 +108,7 @@ const StoreGameCard = ({ game }) => {
           <ShoppingCart size={18} />
           {added ? 'Added!' : !user ? 'Log in' : 'Add to Cart'}
         </button>
+      </div>
       </div>
     </div>
   )
