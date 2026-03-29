@@ -142,7 +142,10 @@ export const getGameDetails = async (gameId) => {
     // Extract co-op info
     let coop = false;
     if (game["co-op"]) {
-      coop = game["co-op"] === "Yes" || game["co-op"] === true || game["co-op"] === 1;
+      coop =
+        game["co-op"] === "Yes" ||
+        game["co-op"] === true ||
+        game["co-op"] === 1;
     }
 
     const result = {
