@@ -53,6 +53,12 @@ export const CartProvider = ({ children, userId }) => {
     setItems([])
   }
 
+  const checkout = async () => {
+    if (!userId) throw new Error('Must be logged in')
+    await cartService.checkout(userId)
+    setItems([])
+  }
+
   const total = cartService.getCartTotal(items)
   const count = cartService.getCartCount(items)
 
@@ -65,7 +71,8 @@ export const CartProvider = ({ children, userId }) => {
       addToCart,
       removeFromCart,
       updateQuantity,
-      clearCart
+      clearCart,
+      checkout
     }}>
       {children}
     </CartContext.Provider>

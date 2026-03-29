@@ -48,6 +48,7 @@ La aplicación estará disponible en `http://localhost:5173/`
 ## Credenciales de Prueba
 
 **Admin:**
+
 - Usuario: `admin`
 - Contraseña: `admin`
 

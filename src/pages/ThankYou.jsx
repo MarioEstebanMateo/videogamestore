@@ -38,8 +38,8 @@ const ThankYou = () => {
             We've received your order and will process it right away.
           </p>
 
-          <div className={`${isDark ? 'bg-slate-800' : 'bg-slate-100'} rounded-lg p-8 mb-8 text-left inline-block`}>
-            <h2 className="text-xl font-bold mb-4">Order Details</h2>
+          <div className={`${isDark ? 'bg-slate-800' : 'bg-slate-100'} rounded-lg p-8 mb-8 w-full max-w-lg mx-auto`}>
+            <h2 className="text-xl font-bold mb-4 text-center">Order Details</h2>
             <ul className={`space-y-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
               <li>✓ Order confirmation has been sent to your email</li>
               <li>✓ You can download your games immediately</li>

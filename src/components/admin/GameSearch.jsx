@@ -82,10 +82,37 @@ const GameSearch = ({ onSelectGame }) => {
                     <div className="w-16 h-20 bg-gray-300 dark:bg-gray-600 rounded flex items-center justify-center text-sm text-center">No image</div>
                   )}
                   <div className="flex-1">
-                    <h3 className="font-semibold">{game.game_title}</h3>
-                    {game.release_date && <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Released: {game.release_date}</p>}
-                    {game.rating && <p className="text-yellow-400 text-sm">⭐ {game.rating}</p>}
-                    {game.genres && <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{Array.isArray(game.genres) ? game.genres.join(', ') : game.genres}</p>}
+                    <h3 className="font-semibold text-lg">{game.game_title}</h3>
+                    {game.overview && (
+                      <p className={`text-sm mt-1 ${isDark ? 'text-gray-300' : 'text-gray-700'} line-clamp-2`}>
+                        {game.overview.length > 150 ? game.overview.substring(0, 150) + '...' : game.overview}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {game.genres && game.genres.length > 0 && (
+                        <span className={`text-xs px-2 py-1 rounded ${isDark ? 'bg-slate-600 text-gray-300' : 'bg-gray-200 text-gray-700'}`}>
+                          {Array.isArray(game.genres) ? game.genres.join(', ') : game.genres}
+                        </span>
+                      )}
+                      {game.platforms && game.platforms.length > 0 && (
+                        <span className={`text-xs px-2 py-1 rounded ${isDark ? 'bg-slate-600 text-gray-300' : 'bg-gray-200 text-gray-700'}`}>
+                          Platforms: {Array.isArray(game.platforms) ? game.platforms.join(', ') : game.platforms}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-center mt-2">
+                      {game.release_date && (
+                        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Release: {game.release_date}
+                        </p>
+                      )}
+                      {game.rating && game.rating !== 'Not Rated' && (
+                        <div className="flex items-center gap-1">
+                          <span className="text-yellow-400">⭐</span>
+                          <span className="text-sm font-medium">{game.rating}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

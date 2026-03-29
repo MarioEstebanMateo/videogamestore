@@ -22,19 +22,19 @@ const Home = () => {
   }
 
   return (
-    <div>
-      <h1>Video Game Store by Mario</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">Video Game Store by Mario</h1>
       
       <SearchBar onSearch={handleSearch} />
       
-      {error && <p>Error: {error}</p>}
+      {error && <p className="text-red-500 text-center mt-4">Error: {error}</p>}
       
-      {searching && <p>Buscando...</p>}
+      {searching && <p className="text-center mt-4">Searching...</p>}
       
       {games.length > 0 && (
-        <div>
-          <h2>Resultados: {games.length}</h2>
-          <div>
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Results: {games.length}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {games.map((game, index) => (
               <GameCard key={game.id || index} game={game} />
             ))}

@@ -1,20 +1,30 @@
 import React from 'react'
 import { useTheme } from '../../hooks/useTheme'
 import { useCart } from '../../hooks/useCart'
+import { useAuth } from '../../hooks/useAuth'
 import { ShoppingCart } from 'lucide-react'
 
 const StoreGameCard = ({ game }) => {
   const { isDark } = useTheme()
   const { addToCart } = useCart()
+  const { user } = useAuth()
   const [added, setAdded] = React.useState(false)
+  const [error, setError] = React.useState('')
 
   const handleAddToCart = async () => {
+    if (!user) {
+      setError('You must log in to add to cart')
+      setTimeout(() => setError(''), 3000)
+      return
+    }
     try {
+      setError('')
       await addToCart(game)
       setAdded(true)
       setTimeout(() => setAdded(false), 2000)
-    } catch (error) {
-      console.error('Error adding to cart:', error)
+    } catch (err) {
+      setError(err.message)
+      setTimeout(() => setError(''), 3000)
     }
   }
 
@@ -66,13 +76,19 @@ const StoreGameCard = ({ game }) => {
           </div>
         </div>
 
+        {error && (
+          <div className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-2 rounded mb-2 text-sm">
+            {error}
+          </div>
+        )}
+
         <button
           onClick={handleAddToCart}
-          disabled={game.stock === 0}
+          disabled={game.stock === 0 || !user}
           className={`w-full py-2 rounded font-medium flex items-center justify-center gap-2 transition-colors ${added ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'} text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-500 flex-shrink-0`}
         >
           <ShoppingCart size={18} />
-          {added ? 'Added!' : 'Add to Cart'}
+          {added ? 'Added!' : !user ? 'Log in' : 'Add to Cart'}
         </button>
       </div>
     </div>

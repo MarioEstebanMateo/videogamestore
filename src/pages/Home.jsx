@@ -35,6 +35,8 @@ const Home = () => {
     }
   }
 
+  const refreshGames = () => loadGames()
+
   const filteredGames = games.filter(game =>
     game.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     game.genre.toLowerCase().includes(searchTerm.toLowerCase())
@@ -101,7 +103,7 @@ const Home = () => {
       <Footer />
 
       {/* Cart Drawer */}
-      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} onCheckoutSuccess={refreshGames} />
 
       {/* Auth Modals */}
       <LoginModal

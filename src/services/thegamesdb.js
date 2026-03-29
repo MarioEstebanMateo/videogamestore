@@ -2,8 +2,10 @@ const API_KEY = import.meta.env.VITE_GAMES_DB_API_KEY;
 
 export const searchGamesTheGamesDB = async (gameName) => {
   try {
-    if (!API_KEY || API_KEY === 'YOUR_API_KEY_HERE') {
-      throw new Error('TheGamesDB API key not configured. Please add VITE_GAMES_DB_API_KEY to .env.local');
+    if (!API_KEY || API_KEY === "YOUR_API_KEY_HERE") {
+      throw new Error(
+        "TheGamesDB API key not configured. Please add VITE_GAMES_DB_API_KEY to .env.local",
+      );
     }
 
     // First search to get game IDs
@@ -41,7 +43,7 @@ export const searchGamesTheGamesDB = async (gameName) => {
 export const getGameDetails = async (gameId) => {
   try {
     const response = await fetch(
-      `/api/Games?id=${gameId}&fields=id,game_title,overview,release_date,rating,genres,images,developers,publishers,platforms,players,co-op&apikey=${API_KEY}`,
+      `/api/Games/ByGameID?id=${gameId}&fields=id,game_title,overview,release_date,rating,genres,images,developers,publishers,platforms,players,co-op&apikey=${API_KEY}`,
     );
 
     if (!response.ok) {
@@ -51,26 +53,36 @@ export const getGameDetails = async (gameId) => {
     const data = await response.json();
     console.log("Game Details for ID " + gameId + ":", data);
 
-    const game = data.data?.games?.[gameId];
+    const game = data.data?.games?.[0];
     if (!game) return null;
 
-    // Extract image URL - only from TheGamesDB
+    // Fetch images separately
     let imageUrl = null;
-
-    if (game.images && Array.isArray(game.images) && game.images.length > 0) {
-      console.log("Images found:", game.images);
-      const coverImage = game.images.find(
-        (img) =>
-          img.type === "cover" ||
-          img.type === "fanart" ||
-          img.type === "banner",
+    try {
+      const imagesResponse = await fetch(
+        `/api/Games/Images?games_id=${gameId}&apikey=${API_KEY}`,
       );
+      if (imagesResponse.ok) {
+        const imagesData = await imagesResponse.json();
+        console.log("Images data for ID " + gameId + ":", imagesData);
 
-      if (coverImage && coverImage.filename) {
-        imageUrl = `https://cdn.thegamesdb.net/images/${coverImage.filename}`;
-      } else if (game.images[0].filename) {
-        imageUrl = `https://cdn.thegamesdb.net/images/${game.images[0].filename}`;
+        const baseUrl =
+          imagesData.data?.base_url?.thumb ||
+          "https://cdn.thegamesdb.net/images/thumb/";
+        const gameImages = imagesData.data?.images?.[gameId] || [];
+
+        if (gameImages.length > 0) {
+          const coverImage = gameImages.find(
+            (img) => img.type === "boxart" && img.side === "front",
+          );
+          if (coverImage) {
+            imageUrl = baseUrl + coverImage.filename;
+            console.log("Image URL:", imageUrl);
+          }
+        }
       }
+    } catch (error) {
+      console.error("Error fetching images:", error);
     }
 
     // Extract genres

@@ -5,6 +5,7 @@ import { useCart } from '../../hooks/useCart'
 import { Link, useNavigate } from 'react-router-dom'
 import { Moon, Sun, ShoppingCart, Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import logo from '../../assets/logo.png'
 
 const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
   const { isDark, toggleTheme } = useTheme()
@@ -27,8 +28,11 @@ const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
     <header className={`${isDark ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'} border-b ${isDark ? 'border-slate-800' : 'border-slate-200'} sticky top-0 z-50`}>
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-transparent">
-          Video Games Store by Mario
+        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <img src={logo} alt="Game Store Logo" className="h-10 w-auto" />
+          <span className="text-lg font-bold bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-transparent hidden md:inline">
+            Video Games Store by Mario
+          </span>
         </Link>
 
         {/* Desktop Menu */}

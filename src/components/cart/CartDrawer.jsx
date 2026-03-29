@@ -2,12 +2,23 @@ import React from 'react'
 import { useTheme } from '../../hooks/useTheme'
 import { useCart } from '../../hooks/useCart'
 import { useAuth } from '../../hooks/useAuth'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { X, Trash2 } from 'lucide-react'
 
 const CartItem = ({ item }) => {
   const { isDark } = useTheme()
   const { updateQuantity, removeFromCart } = useCart()
+  const [error, setError] = React.useState('')
+
+  const handleUpdateQuantity = async (newQuantity) => {
+    try {
+      setError('')
+      await updateQuantity(item.id, newQuantity)
+    } catch (err) {
+      setError(err.message)
+      setTimeout(() => setError(''), 3000)
+    }
+  }
 
   return (
     <div className={`flex gap-4 py-4 border-b ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>
@@ -15,16 +26,19 @@ const CartItem = ({ item }) => {
       <div className="flex-1">
         <h3 className="font-semibold line-clamp-1">{item.title}</h3>
         <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>${item.price.toFixed(2)}</p>
+        {error && (
+          <p className="text-red-500 text-xs mt-1">{error}</p>
+        )}
         <div className="flex items-center gap-2 mt-2">
           <button
-            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+            onClick={() => handleUpdateQuantity(item.quantity - 1)}
             className={`px-2 py-1 rounded text-sm ${isDark ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-200 hover:bg-slate-300'}`}
           >
             -
           </button>
           <span className="w-8 text-center">{item.quantity}</span>
           <button
-            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+            onClick={() => handleUpdateQuantity(item.quantity + 1)}
             className={`px-2 py-1 rounded text-sm ${isDark ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-200 hover:bg-slate-300'}`}
           >
             +
@@ -44,10 +58,24 @@ const CartItem = ({ item }) => {
   )
 }
 
-const CartDrawer = ({ isOpen, onClose }) => {
+const CartDrawer = ({ isOpen, onClose, onCheckoutSuccess }) => {
   const { isDark } = useTheme()
-  const { items, total, clearCart } = useCart()
+  const { items, total, clearCart, checkout } = useCart()
   const { user } = useAuth()
+  const navigate = useNavigate()
+  const [checkoutError, setCheckoutError] = React.useState('')
+
+  const handleCheckout = async () => {
+    try {
+      setCheckoutError('')
+      await checkout()
+      onCheckoutSuccess?.()
+      navigate('/thank-you')
+      onClose()
+    } catch (err) {
+      setCheckoutError(err.message)
+    }
+  }
 
   if (!isOpen) return null
 
@@ -87,13 +115,17 @@ const CartDrawer = ({ isOpen, onClose }) => {
               <span>Total:</span>
               <span className="text-emerald-500">${total.toFixed(2)}</span>
             </div>
-            <Link
-              to="/checkout"
-              onClick={onClose}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-medium text-center transition-colors block"
+            {checkoutError && (
+              <div className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-2 rounded text-sm">
+                {checkoutError}
+              </div>
+            )}
+            <button
+              onClick={handleCheckout}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-medium transition-colors"
             >
-              Proceed to Checkout
-            </Link>
+              Checkout
+            </button>
             <button
               onClick={() => clearCart()}
               className={`w-full py-2 rounded font-medium transition-colors ${isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'}`}

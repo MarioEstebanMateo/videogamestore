@@ -1,6 +1,8 @@
 // Local cart service
 // Stores cart in localStorage per user
 
+import * as db from "./db.js";
+
 const CART_KEY = "videogamestore_cart";
 
 const getCart = (userId) => {
@@ -21,6 +23,15 @@ export const getCartItems = async (userId) => {
 export const addToCart = async (userId, game) => {
   const cart = getCart(userId);
   const existingItem = cart.find((item) => item.id === game.id);
+
+  // Get current stock from db
+  const currentGame = await db.getGameById(game.id);
+  const availableStock = currentGame.stock;
+
+  const currentQuantity = existingItem ? existingItem.quantity : 0;
+  if (currentQuantity + 1 > availableStock) {
+    throw new Error(`Not enough stock available. Available: ${availableStock}`);
+  }
 
   if (existingItem) {
     existingItem.quantity += 1;
@@ -50,6 +61,15 @@ export const updateCartItem = async (userId, gameId, quantity) => {
     if (quantity <= 0) {
       return removeFromCart(userId, gameId);
     }
+
+    // Get current stock from db
+    const currentGame = await db.getGameById(gameId);
+    if (quantity > currentGame.stock) {
+      throw new Error(
+        `Not enough stock available. Available: ${currentGame.stock}`,
+      );
+    }
+
     item.quantity = quantity;
     saveCart(userId, cart);
   }
@@ -61,6 +81,19 @@ export const clearCart = async (userId) => {
   const key = `${CART_KEY}_${userId}`;
   localStorage.removeItem(key);
   return [];
+};
+
+export const checkout = async (userId) => {
+  const cart = getCart(userId);
+  for (const item of cart) {
+    const game = await db.getGameById(item.id);
+    if (game.stock < item.quantity) {
+      throw new Error(`Insufficient stock for ${game.title}`);
+    }
+    await db.updateGame(item.id, { stock: game.stock - item.quantity });
+  }
+  // Clear cart after successful checkout
+  return clearCart(userId);
 };
 
 export const getCartTotal = (items) => {
