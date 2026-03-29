@@ -7,7 +7,6 @@ import { X } from 'lucide-react'
 const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const { signup } = useAuth()
   const { isDark } = useTheme()
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [loading, setLoading] = useState(false)
@@ -15,11 +14,11 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!email || !password || !username) {
+    if (!password || !username) {
       Swal.fire({
         icon: 'warning',
         title: 'Missing Fields',
-        text: 'All fields are required',
+        text: 'Username and password are required',
         background: isDark ? '#1e293b' : '#ffffff',
         color: isDark ? '#f1f5f9' : '#000000',
       })
@@ -40,7 +39,7 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
     setLoading(true)
 
     try {
-      await signup(email, password, username)
+      await signup(username, password)
       Swal.fire({
         icon: 'success',
         title: 'Account Created!',
@@ -49,7 +48,6 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
         color: isDark ? '#f1f5f9' : '#000000',
       })
       onClose()
-      setEmail('')
       setPassword('')
       setUsername('')
     } catch (err) {
@@ -86,18 +84,6 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               onChange={(e) => setUsername(e.target.value)}
               className={`w-full px-4 py-2 rounded border ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-white border-slate-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
               disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={`w-full px-4 py-2 rounded border ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-white border-slate-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              disabled={loading}
-              placeholder="user@example.com"
             />
           </div>
 

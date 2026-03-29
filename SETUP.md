@@ -10,7 +10,7 @@ Una tienda de videojuegos moderna construida con Vite, React y Tailwind CSS.
 - 🖼️ Panel de administración para gestionar juegos
 - 🌙 Modo oscuro/claro
 - 📱 Diseño completamente responsive
-- 💾 Base de datos local con localStorage
+- 💾 Base de datos Supabase (PostgreSQL) con usuarios y juegos
 
 ## Configuración
 
@@ -21,19 +21,66 @@ Una tienda de videojuegos moderna construida con Vite, React y Tailwind CSS.
 3. Ve a tu perfil y copia tu API Key única
 4. La API Key se genera automáticamente - solo cópiala
 
-### 2. Configurar la API Key
+### 2. Configurar Supabase
+
+1. Crea un proyecto en [https://supabase.com](https://supabase.com)
+2. En tu proyecto, ve a **SQL Editor** y ejecuta este SQL para crear las tablas:
+
+```sql
+-- Games table
+CREATE TABLE IF NOT EXISTS games (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  image_url TEXT,
+  screenshot_url TEXT,
+  developer TEXT,
+  publisher TEXT,
+  genres TEXT,
+  platforms TEXT,
+  rating DECIMAL,
+  release_date TEXT,
+  price DECIMAL NOT NULL,
+  stock INTEGER NOT NULL DEFAULT 0,
+  is_published BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+  id BIGSERIAL PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL
+);
+
+-- Insert default admin user
+INSERT INTO users (username, password_hash) VALUES ('admin', 'admin')
+ON CONFLICT (username) DO NOTHING;
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_games_is_published ON games(is_published);
+```
+
+3. Ve a **Settings** > **API** y copia:
+   - Project URL
+   - Anon/Public Key
+
+### 3. Configurar la API Key
 
 Abre o crea un archivo `.env` en la raíz del proyecto:
 
 ```env
-VITE_RAWG_API_KEY=TU_API_KEY_AQUI
+VITE_RAWG_API_KEY=TU_API_KEY_DE_RAWG
+VITE_SUPABASE_URL=TU_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=TU_SUPABASE_ANON_KEY
 ```
 
-Reemplaza `TU_API_KEY_AQUI` con tu API key real de RAWG.
+Reemplaza con tus valores reales de RAWG y Supabase.
 
-### 3. Reiniciar el servidor
+### 4. Reiniciar el servidor
 
-Después de agregar la API Key al archivo `.env`, reinicia el servidor de desarrollo:
+Después de agregar las claves al archivo `.env`, reinicia el servidor de desarrollo:
 
 ```bash
 npm run dev
@@ -82,7 +129,7 @@ src/
 ## Datos de Juegos
 
 - **Búsqueda**: Se obtienen de RAWG en tiempo real
-- **Almacenamiento**: Se guardan en localStorage con datos completos:
+- **Almacenamiento**: Se guardan en Supabase con datos completos:
   - Imagen real del juego
   - Desarrollador
   - Editor/Publicador
@@ -90,7 +137,9 @@ src/
   - Fecha de lanzamiento
   - Calificación (rating)
   - Géneros
-  - información de co-op
+  - Información de co-op
+  - Stock y precio
+  - Base de datos compartida entre usuarios
 
 ## Admin Features
 
@@ -108,10 +157,15 @@ npm run build
 
 ## Notas
 
-- Todos los datos se almacenan en localStorage del navegador
-- No hay backend servidor (localStorage es la BD)
+- Todos los datos se almacenan en Supabase (PostgreSQL en la nube)
+- Las sesiones de usuarios se guardan en localStorage (el usuario actual)
+- El carrito de compras se almacena en localStorage (no persiste entre dispositivos)
+- Los usuarios se guardan en Supabase
+- **Admin es automáticamente creado**: usuario `admin` con contraseña `admin`
 - Las imágenes y datos de juegos se obtienen desde la API de RAWG
-- Admin tiene acceso completo al panel
+- Admin tiene acceso completo al panel de administración
+- Los datos de usuarios y juegos publicados son compartidos entre todos los usuarios de la tienda
+- No se guarda información de pedidos (solo se reduce el stock)
 
 ---
 

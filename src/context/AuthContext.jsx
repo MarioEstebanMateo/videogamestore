@@ -17,17 +17,13 @@ export const AuthProvider = ({ children }) => {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    let currentUser = authService.getCurrentUser()
-    // Ensure admin user has is_admin flag
-    if (currentUser && currentUser.email === "admin" && !currentUser.is_admin) {
-      currentUser.is_admin = true
-    }
+    const currentUser = authService.getCurrentUser()
     setUser(currentUser)
     setLoading(false)
   }, [])
 
-  const login = async (email, password) => {
-    const userData = await authService.login(email, password)
+  const login = async (username, password) => {
+    const userData = await authService.login(username, password)
     setUser(userData)
     Swal.fire({
       title: 'Login successful!',
@@ -39,8 +35,8 @@ export const AuthProvider = ({ children }) => {
     return userData
   }
 
-  const signup = async (email, password, username) => {
-    const userData = await authService.signup(email, password, username)
+  const signup = async (username, password) => {
+    const userData = await authService.signup(username, password)
     setUser(userData)
     Swal.fire({
       title: 'Registration successful!',

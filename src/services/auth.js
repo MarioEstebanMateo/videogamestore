@@ -1,105 +1,94 @@
-// Local authentication service
-// Simulates user authentication - can be replaced with Supabase Auth later
+import * as db from "./db";
 
-const USERS_KEY = "videogamestore_users";
 const CURRENT_USER_KEY = "videogamestore_current_user";
 
-// Default admin user
-const defaultAdmin = {
-  id: "0",
-  email: "admin",
-  username: "admin",
-  password: "admin",
-  is_admin: true,
-  created_at: new Date().toISOString(),
-};
-
-const getUsers = () => {
-  const stored = localStorage.getItem(USERS_KEY);
-  const users = stored ? JSON.parse(stored) : [defaultAdmin];
-
-  // Ensure admin always exists
-  if (!users.find((u) => u.email === "admin")) {
-    users.push(defaultAdmin);
-    saveUsers(users);
-  }
-
-  return users;
-};
-
-const saveUsers = (users) => {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-};
-
+// Get current user from localStorage
 export const getCurrentUser = () => {
-  const stored = localStorage.getItem(CURRENT_USER_KEY);
-  return stored ? JSON.parse(stored) : null;
-};
-
-const setCurrentUser = (user) => {
-  if (user) {
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(CURRENT_USER_KEY);
+  try {
+    const stored =
+      typeof window !== "undefined"
+        ? localStorage.getItem(CURRENT_USER_KEY)
+        : null;
+    return stored ? JSON.parse(stored) : null;
+  } catch (error) {
+    console.error("Error getting current user:", error);
+    return null;
   }
 };
 
-// Helper function to validate email format
-const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+// Set current user in localStorage
+const setCurrentUser = (user) => {
+  try {
+    if (user) {
+      if (typeof window !== "undefined") {
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+      }
+    } else {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(CURRENT_USER_KEY);
+      }
+    }
+  } catch (error) {
+    console.error("Error setting current user:", error);
+  }
 };
+
+// Ensure admin user exists (created via SQL in Supabase)
+const ensureAdminExists = async () => {
+  // Admin is now created directly in the database via SQL
+  // No need to check or create it here
+};
+
+// Initialize admin on startup
+ensureAdminExists();
 
 // Sign up
-export const signup = async (email, password, username) => {
-  const users = getUsers();
+export const signup = async (username, password) => {
+  try {
+    // Check if username already exists
+    const existingUser = await db.getUserByUsername(username);
+    if (existingUser) {
+      throw new Error("Username already registered");
+    }
 
-  // Validate email format for non-admin users
-  if (email !== "admin" && !isValidEmail(email)) {
-    throw new Error("Please enter a valid email address");
+    // Create user in database
+    const newUser = await db.createUser({
+      username: username,
+      password_hash: password, // In production, hash this with bcryptjs!
+    });
+
+    // Set as current user
+    setCurrentUser(newUser);
+
+    return newUser;
+  } catch (error) {
+    console.error("Error signing up:", error);
+    throw error;
   }
-
-  // Check if email already exists
-  if (users.find((u) => u.email === email)) {
-    throw new Error("Email/username already registered");
-  }
-
-  const newUser = {
-    id: Date.now().toString(),
-    email,
-    username,
-    password: password, // In production, hash this!
-    created_at: new Date().toISOString(),
-  };
-
-  users.push(newUser);
-  saveUsers(users);
-  setCurrentUser(newUser);
-
-  return newUser;
 };
 
 // Login
-export const login = async (email, password) => {
-  const users = getUsers();
-  let user = users.find((u) => u.email === email && u.password === password);
+export const login = async (username, password) => {
+  try {
+    // Find user by username
+    const user = await db.getUserByUsername(username);
 
-  if (!user) {
-    throw new Error("Invalid username/email or password");
+    if (!user || user.password_hash !== password) {
+      throw new Error("Invalid username or password");
+    }
+
+    // Set as current user
+    setCurrentUser(user);
+
+    return user;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
   }
-
-  // Ensure admin user has is_admin flag
-  if (user.email === "admin" && !user.is_admin) {
-    user.is_admin = true;
-    saveUsers(users);
-  }
-
-  setCurrentUser(user);
-  return user;
 };
 
 // Logout
-export const logout = async () => {
+export const logout = () => {
   setCurrentUser(null);
 };
 

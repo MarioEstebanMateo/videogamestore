@@ -7,7 +7,7 @@ import { X } from 'lucide-react'
 const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
   const { login } = useAuth()
   const { isDark } = useTheme()
-  const [email, setEmail] = useState('admin')
+  const [username, setUsername] = useState('admin')
   const [password, setPassword] = useState('admin')
   const [loading, setLoading] = useState(false)
 
@@ -16,7 +16,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
     setLoading(true)
 
     try {
-      await login(email, password)
+      await login(username, password)
       Swal.fire({
         icon: 'success',
         title: 'Success!',
@@ -25,7 +25,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
         color: isDark ? '#f1f5f9' : '#000000',
       })
       onClose()
-      setEmail('')
+      setUsername('')
       setPassword('')
     } catch (err) {
       Swal.fire({
@@ -57,8 +57,8 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
             <label className="block text-sm font-medium mb-2">Username</label>
             <input
               type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className={`w-full px-4 py-2 rounded border ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-white border-slate-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
               disabled={loading}
               placeholder="admin"

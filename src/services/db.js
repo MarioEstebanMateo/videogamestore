@@ -1,261 +1,185 @@
-// Local database service using localStorage
-// This simulates a backend - can be easily replaced with Supabase later
-
-const DB_KEY = "videogamestore_db";
-
-const defaultDB = {
-  games: [
-    {
-      id: "1",
-      title: "The Legend of Zelda: Breath of the Wild",
-      description:
-        "An open-world action-adventure game featuring Link's quest to save Hyrule.",
-      genre: "Action-Adventure",
-      rating: 9.7,
-      image_url:
-        "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=300&h=400&fit=crop",
-      developers: "Nintendo EPD",
-      publishers: "Nintendo",
-      platforms: "Nintendo Switch",
-      release_date: "2017-03-03",
-      players: "1",
-      coop: false,
-      stock: 15,
-      price: 59.99,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "2",
-      title: "Elden Ring",
-      description:
-        "A masterpiece of dark fantasy action RPG by FromSoftware and George R. R. Martin.",
-      genre: "Action RPG",
-      rating: 9.5,
-      image_url:
-        "https://images.unsplash.com/photo-1566036782092-ec76699dc621?w=300&h=400&fit=crop",
-      developers: "FromSoftware",
-      publishers: "Bandai Namco Entertainment",
-      platforms: "PC, PlayStation 4, PlayStation 5, Xbox One, Xbox Series X/S",
-      release_date: "2022-02-25",
-      players: "1-4",
-      coop: true,
-      stock: 20,
-      price: 59.99,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "3",
-      title: "Cyberpunk 2077",
-      description:
-        "An open-world action RPG set in a dystopian future metropolis.",
-      genre: "Action RPG",
-      rating: 8.2,
-      image_url:
-        "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=300&h=400&fit=crop",
-      developers: "CD Projekt Red",
-      publishers: "CD Projekt",
-      platforms: "PC, PlayStation 4, PlayStation 5, Xbox One, Xbox Series X/S",
-      release_date: "2020-12-10",
-      players: "1",
-      coop: false,
-      stock: 12,
-      price: 49.99,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "4",
-      title: "Stardew Valley",
-      description:
-        "A relaxing farming simulator with adventure and romance elements.",
-      genre: "Simulation",
-      rating: 9.2,
-      image_url:
-        "https://images.unsplash.com/photo-1611584291446-074e107db965?w=300&h=400&fit=crop",
-      developers: "ConcernedApe",
-      publishers: "ConcernedApe",
-      platforms: "PC, Mac, Linux, Nintendo Switch, PlayStation, Xbox",
-      release_date: "2016-02-28",
-      players: "1-4",
-      coop: true,
-      stock: 25,
-      price: 14.99,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "5",
-      title: "Hades",
-      description:
-        "A roguelike dungeon crawler with stunning art and engaging combat.",
-      genre: "Roguelike",
-      rating: 9.1,
-      image_url:
-        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=300&h=400&fit=crop",
-      developers: "Supergiant Games",
-      publishers: "Supergiant Games",
-      platforms: "Nintendo Switch, PC, PlayStation 4, Xbox One",
-      release_date: "2020-09-17",
-      players: "1",
-      coop: false,
-      stock: 18,
-      price: 24.99,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "6",
-      title: "Minecraft",
-      description: "Build, explore, and survive in an infinite blocky world.",
-      genre: "Sandbox",
-      rating: 9.4,
-      image_url:
-        "https://images.unsplash.com/photo-1538481143081-267f06b348bb?w=300&h=400&fit=crop",
-      developers: "Mojang Studios",
-      publishers: "Microsoft",
-      platforms: "PC, Mac, Linux, PlayStation, Xbox, Nintendo Switch",
-      release_date: "2011-11-18",
-      players: "1-8",
-      coop: true,
-      stock: 30,
-      price: 26.95,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "7",
-      title: "The Witcher 3",
-      description:
-        "Epic fantasy RPG with rich storytelling and monster hunting.",
-      genre: "Action RPG",
-      rating: 9.3,
-      image_url:
-        "https://images.unsplash.com/photo-1518611505868-d7e843982d6f?w=300&h=400&fit=crop",
-      developers: "CD Projekt Red",
-      publishers: "CD Projekt",
-      platforms: "PC, PlayStation, Xbox, Nintendo Switch",
-      release_date: "2015-05-19",
-      players: "1",
-      coop: false,
-      stock: 10,
-      price: 39.99,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "8",
-      title: "Hollow Knight",
-      description: "A challenging metroidvania with beautiful hand-drawn art.",
-      genre: "Metroidvania",
-      rating: 8.8,
-      image_url:
-        "https://images.unsplash.com/photo-1573521193529-fbb75c612e4f?w=300&h=400&fit=crop",
-      developers: "Team Cherry",
-      publishers: "Team Cherry",
-      platforms: "PC, Nintendo Switch, PlayStation 4, Xbox One",
-      release_date: "2017-02-24",
-      players: "1",
-      coop: false,
-      stock: 22,
-      price: 14.99,
-      is_published: true,
-      created_at: new Date().toISOString(),
-    },
-  ],
-  users: [],
-  orders: [],
-};
-
-// Get database from localStorage
-const getDB = () => {
-  const stored = localStorage.getItem(DB_KEY);
-  return stored ? JSON.parse(stored) : defaultDB;
-};
-
-// Save database to localStorage
-const saveDB = (db) => {
-  localStorage.setItem(DB_KEY, JSON.stringify(db));
-};
+import { supabase } from "./supabaseClient";
 
 // ============= GAMES =============
 
 export const getAllGames = async (published = true) => {
-  const db = getDB();
-  if (published) {
-    return db.games.filter((g) => g.is_published);
+  try {
+    let query = supabase.from("games").select("*");
+
+    if (published) {
+      query = query.eq("is_published", true);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching games:", error);
+    throw error;
   }
-  return db.games;
 };
 
 export const getGameById = async (id) => {
-  const db = getDB();
-  return db.games.find((g) => g.id === id);
+  try {
+    const { data, error } = await supabase
+      .from("games")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error; // PGRST116 = row not found
+    return data || null;
+  } catch (error) {
+    console.error("Error fetching game:", error);
+    throw error;
+  }
 };
 
 export const createGame = async (gameData) => {
-  const db = getDB();
-  const newGame = {
-    id: Date.now().toString(),
-    ...gameData,
-    is_published:
-      gameData.is_published !== undefined ? gameData.is_published : false,
-    created_at: new Date().toISOString(),
-  };
-  db.games.push(newGame);
-  saveDB(db);
-  return newGame;
+  try {
+    const newGame = {
+      id: Date.now().toString(),
+      ...gameData,
+      is_published:
+        gameData.is_published !== undefined ? gameData.is_published : false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await supabase
+      .from("games")
+      .insert([newGame])
+      .select();
+
+    if (error) throw error;
+    return data?.[0] || newGame;
+  } catch (error) {
+    console.error("Error creating game:", error);
+    throw error;
+  }
 };
 
 export const updateGame = async (id, gameData) => {
-  const db = getDB();
-  const index = db.games.findIndex((g) => g.id === id);
-  if (index !== -1) {
-    db.games[index] = { ...db.games[index], ...gameData };
-    saveDB(db);
-    return db.games[index];
+  try {
+    const { data, error } = await supabase
+      .from("games")
+      .update({
+        ...gameData,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+    return data?.[0] || null;
+  } catch (error) {
+    console.error("Error updating game:", error);
+    throw error;
   }
-  throw new Error("Game not found");
 };
 
 export const publishGame = async (id, stockData) => {
-  const db = getDB();
-  const game = db.games.find((g) => g.id === id);
-  if (game) {
-    game.stock = stockData.stock;
-    game.price = stockData.price;
-    game.is_published = true;
-    saveDB(db);
-    return game;
+  try {
+    const { data, error } = await supabase
+      .from("games")
+      .update({
+        stock: stockData.stock,
+        price: stockData.price,
+        is_published: true,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+    return data?.[0] || null;
+  } catch (error) {
+    console.error("Error publishing game:", error);
+    throw error;
   }
-  throw new Error("Game not found");
 };
 
 export const deleteGame = async (id) => {
-  const db = getDB();
-  db.games = db.games.filter((g) => g.id !== id);
-  saveDB(db);
+  try {
+    const { error } = await supabase.from("games").delete().eq("id", id);
+
+    if (error) throw error;
+  } catch (error) {
+    console.error("Error deleting game:", error);
+    throw error;
+  }
 };
 
-// ============= ORDERS =============
+// ============= CHECKOUT (reducir stock) =============
 
-export const createOrder = async (userId, items, totalPrice) => {
-  const db = getDB();
-  const newOrder = {
-    id: Date.now().toString(),
-    user_id: userId,
-    items: items,
-    total_price: totalPrice,
-    status: "completed",
-    created_at: new Date().toISOString(),
-  };
-  db.orders.push(newOrder);
-  saveDB(db);
-  return newOrder;
+export const checkout = async (items) => {
+  try {
+    // Reduce stock for each item purchased
+    for (const item of items) {
+      const game = await getGameById(item.id);
+      if (game) {
+        await updateGame(item.id, {
+          stock: Math.max(0, game.stock - item.quantity),
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error in checkout:", error);
+    throw error;
+  }
 };
 
-export const getUserOrders = async (userId) => {
-  const db = getDB();
-  return db.orders.filter((o) => o.user_id === userId);
+// ============= USERS =============
+
+export const createUser = async (userData) => {
+  try {
+    const newUser = {
+      username: userData.username,
+      password_hash: userData.password_hash,
+    };
+
+    const { data, error } = await supabase
+      .from("users")
+      .insert([newUser])
+      .select();
+
+    if (error) throw error;
+    return data?.[0] || newUser;
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
+};
+
+export const getUserByUsername = async (username) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", username)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+    return data || null;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
+};
+
+export const getUserById = async (id) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+    return data || null;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
 };

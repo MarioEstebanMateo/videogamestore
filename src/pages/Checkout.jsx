@@ -43,8 +43,8 @@ const Checkout = () => {
     setProcessing(true)
 
     try {
-      // Save order to database
-      await db.createOrder(user.id, items, total)
+      // Reduce stock for purchased items
+      await db.checkout(items)
       // Clear cart
       await clearCart()
       // Navigate to thank you page
