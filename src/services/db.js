@@ -8,10 +8,12 @@ const defaultDB = {
     {
       id: "1",
       title: "The Legend of Zelda: Breath of the Wild",
-      description: "An open-world action-adventure game featuring Link's quest to save Hyrule.",
+      description:
+        "An open-world action-adventure game featuring Link's quest to save Hyrule.",
       genre: "Action-Adventure",
       rating: 9.7,
-      image_url: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=300&h=400&fit=crop",
       stock: 15,
       price: 59.99,
       is_published: true,
@@ -20,10 +22,12 @@ const defaultDB = {
     {
       id: "2",
       title: "Elden Ring",
-      description: "A masterpiece of dark fantasy action RPG by FromSoftware and George R. R. Martin.",
+      description:
+        "A masterpiece of dark fantasy action RPG by FromSoftware and George R. R. Martin.",
       genre: "Action RPG",
       rating: 9.5,
-      image_url: "https://images.unsplash.com/photo-1566036782092-ec76699dc621?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1566036782092-ec76699dc621?w=300&h=400&fit=crop",
       stock: 20,
       price: 59.99,
       is_published: true,
@@ -32,10 +36,12 @@ const defaultDB = {
     {
       id: "3",
       title: "Cyberpunk 2077",
-      description: "An open-world action RPG set in a dystopian future metropolis.",
+      description:
+        "An open-world action RPG set in a dystopian future metropolis.",
       genre: "Action RPG",
       rating: 8.2,
-      image_url: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=300&h=400&fit=crop",
       stock: 12,
       price: 49.99,
       is_published: true,
@@ -44,10 +50,12 @@ const defaultDB = {
     {
       id: "4",
       title: "Stardew Valley",
-      description: "A relaxing farming simulator with adventure and romance elements.",
+      description:
+        "A relaxing farming simulator with adventure and romance elements.",
       genre: "Simulation",
       rating: 9.2,
-      image_url: "https://images.unsplash.com/photo-1611584291446-074e107db965?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1611584291446-074e107db965?w=300&h=400&fit=crop",
       stock: 25,
       price: 14.99,
       is_published: true,
@@ -56,10 +64,12 @@ const defaultDB = {
     {
       id: "5",
       title: "Hades",
-      description: "A roguelike dungeon crawler with stunning art and engaging combat.",
+      description:
+        "A roguelike dungeon crawler with stunning art and engaging combat.",
       genre: "Roguelike",
       rating: 9.1,
-      image_url: "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=300&h=400&fit=crop",
       stock: 18,
       price: 24.99,
       is_published: true,
@@ -71,7 +81,8 @@ const defaultDB = {
       description: "Build, explore, and survive in an infinite blocky world.",
       genre: "Sandbox",
       rating: 9.4,
-      image_url: "https://images.unsplash.com/photo-1538481143081-267f06b348bb?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1538481143081-267f06b348bb?w=300&h=400&fit=crop",
       stock: 30,
       price: 26.95,
       is_published: true,
@@ -80,10 +91,12 @@ const defaultDB = {
     {
       id: "7",
       title: "The Witcher 3",
-      description: "Epic fantasy RPG with rich storytelling and monster hunting.",
+      description:
+        "Epic fantasy RPG with rich storytelling and monster hunting.",
       genre: "Action RPG",
       rating: 9.3,
-      image_url: "https://images.unsplash.com/photo-1518611505868-d7e843982d6f?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1518611505868-d7e843982d6f?w=300&h=400&fit=crop",
       stock: 10,
       price: 39.99,
       is_published: true,
@@ -95,12 +108,13 @@ const defaultDB = {
       description: "A challenging metroidvania with beautiful hand-drawn art.",
       genre: "Metroidvania",
       rating: 8.8,
-      image_url: "https://images.unsplash.com/photo-1573521193529-fbb75c612e4f?w=300&h=400&fit=crop",
+      image_url:
+        "https://images.unsplash.com/photo-1573521193529-fbb75c612e4f?w=300&h=400&fit=crop",
       stock: 22,
       price: 14.99,
       is_published: true,
       created_at: new Date().toISOString(),
-    }
+    },
   ],
   users: [],
   orders: [],

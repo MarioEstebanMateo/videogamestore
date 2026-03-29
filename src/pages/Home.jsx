@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import StoreGameCard from '../components/store/StoreGameCard'
+import CartDrawer from '../components/cart/CartDrawer'
 import LoginModal from '../components/auth/LoginModal'
 import SignupModal from '../components/auth/SignupModal'
 import * as db from '../services/db'
@@ -13,6 +14,7 @@ const Home = () => {
   const { user } = useAuth()
   const [games, setGames] = useState([])
   const [loading, setLoading] = useState(true)
+  const [cartOpen, setCartOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
   const [signupOpen, setSignupOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -40,7 +42,11 @@ const Home = () => {
 
   return (
     <div className={`min-h-screen flex flex-col ${isDark ? 'bg-slate-950 text-white' : 'bg-white text-slate-900'}`}>
-      <Header onLoginClick={() => setLoginOpen(true)} onSignupClick={() => setSignupOpen(true)} />
+      <Header 
+        onLoginClick={() => setLoginOpen(true)} 
+        onSignupClick={() => setSignupOpen(true)}
+        onCartClick={() => setCartOpen(true)}
+      />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 py-12 w-full">
         {/* Hero Section */}
@@ -93,6 +99,9 @@ const Home = () => {
       </main>
 
       <Footer />
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
 
       {/* Auth Modals */}
       <LoginModal

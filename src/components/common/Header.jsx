@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Moon, Sun, ShoppingCart, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
-const Header = ({ onLoginClick, onSignupClick }) => {
+const Header = ({ onLoginClick, onSignupClick, onCartClick }) => {
   const { isDark, toggleTheme } = useTheme()
   const { user, logout } = useAuth()
   const { count } = useCart()
@@ -42,14 +42,14 @@ const Header = ({ onLoginClick, onSignupClick }) => {
           </button>
 
           {/* Cart */}
-          <Link to="/checkout" className="relative">
-            <ShoppingCart size={24} className="hover:text-blue-500 transition-colors" />
+          <button onClick={onCartClick} className="relative hover:text-blue-500 transition-colors">
+            <ShoppingCart size={24} />
             {count > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {count}
               </span>
             )}
-          </Link>
+          </button>
 
           {/* Auth Menu */}
           {user ? (
@@ -97,14 +97,14 @@ const Header = ({ onLoginClick, onSignupClick }) => {
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
           </button>
 
-          <Link to="/checkout" className="relative">
+          <button onClick={onCartClick} className="relative hover:text-blue-500 transition-colors">
             <ShoppingCart size={20} />
             {count > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-xs">
                 {count}
               </span>
             )}
-          </Link>
+          </button>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
