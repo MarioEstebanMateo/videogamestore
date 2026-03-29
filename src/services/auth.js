@@ -45,6 +45,11 @@ ensureAdminExists();
 // Sign up
 export const signup = async (username, password) => {
   try {
+    // Prevent registration as admin
+    if (username.toLowerCase() === "admin") {
+      throw new Error("This username is reserved and cannot be used");
+    }
+
     // Check if username already exists
     const existingUser = await db.getUserByUsername(username);
     if (existingUser) {

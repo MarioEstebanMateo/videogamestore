@@ -39,8 +39,19 @@ export const getGameById = async (id) => {
 export const createGame = async (gameData) => {
   try {
     const newGame = {
-      id: Date.now().toString(),
-      ...gameData,
+      id: gameData.id || `game-${Date.now()}`,
+      title: gameData.title,
+      description: gameData.description || "",
+      image_url: gameData.image_url || null,
+      screenshot_url: gameData.screenshot_url || null,
+      developer: gameData.developer || "",
+      publisher: gameData.publisher || "",
+      genres: gameData.genres || "",
+      platforms: gameData.platforms || "",
+      rating: gameData.rating || 0,
+      release_date: gameData.release_date || "",
+      price: gameData.price,
+      stock: gameData.stock || 0,
       is_published:
         gameData.is_published !== undefined ? gameData.is_published : false,
       created_at: new Date().toISOString(),

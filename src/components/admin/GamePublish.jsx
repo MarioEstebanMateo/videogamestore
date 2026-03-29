@@ -49,17 +49,17 @@ const GamePublish = ({ selectedGame, onPublished }) => {
       }
       
       const newGame = {
+        id: selectedGame.slug || selectedGame.id || `game-${Date.now()}`,
         title: selectedGame.game_title || selectedGame.title,
         description: selectedGame.overview || selectedGame.description || '',
-        genre: Array.isArray(selectedGame.genre) ? selectedGame.genre.join(', ') : (selectedGame.genre || selectedGame.genres || ''),
+        genres: Array.isArray(selectedGame.genres) ? selectedGame.genres.join(', ') : (selectedGame.genre || selectedGame.genres || ''),
         rating: selectedGame.rating ? parseFloat(selectedGame.rating) : 0,
-        developers: selectedGame.developers ? selectedGame.developers.join(', ') : '',
-        publishers: selectedGame.publishers ? selectedGame.publishers.join(', ') : '',
+        developer: (Array.isArray(selectedGame.developers) ? selectedGame.developers[0] : selectedGame.developer) || '',
+        publisher: (Array.isArray(selectedGame.publishers) ? selectedGame.publishers[0] : selectedGame.publisher) || '',
         platforms: selectedGame.platforms ? selectedGame.platforms.join(', ') : '',
         release_date: selectedGame.release_date || '',
-        players: selectedGame.players || null,
-        coop: selectedGame.coop || false,
         image_url: imageUrl,
+        screenshot_url: imageUrl,
         stock: parseInt(stock),
         price: parseFloat(price),
         is_published: true

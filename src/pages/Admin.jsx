@@ -23,12 +23,12 @@ const Admin = () => {
   const [loginOpen, setLoginOpen] = useState(false)
   const [signupOpen, setSignupOpen] = useState(false)
 
-  if (!user) {
+  if (!user || user.username !== 'admin') {
     return (
       <div className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-white'} flex items-center justify-center`}>
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
-          <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Please log in to access admin panel</p>
+          <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Only admin can access this panel</p>
         </div>
       </div>
     )

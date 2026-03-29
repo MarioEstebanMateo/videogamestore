@@ -17,7 +17,7 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/thank-you" element={<ThankYou />} />
-        {user && <Route path="/admin" element={<Admin />} />}
+        {user?.username === 'admin' && <Route path="/admin" element={<Admin />} />}
       </Routes>
     </CartProvider>
   )
